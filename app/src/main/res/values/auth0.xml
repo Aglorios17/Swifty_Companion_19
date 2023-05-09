@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+ Secret Auth0 identifiers and settings
+ =====================================
+ These values are required to connect to Auth0 for authorization,
+ which is why we're storing them in their own string resource file.
+
+ DO NOT CHECK THIS FILE INTO A PUBLIC REPOSITORY!
+ -->
+
+    <string name="com_auth0_domain">https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-01477382b377be425e718aafe30e69ceab4584725055fe89a072812ee7486d0e&amp;redirect_uri=swiftycompanionapp%3A%2F%2Foauth2callback%2Foauth2callback&amp;response_type=code</string>
+    <string name="com_auth0_client_id">u-s4t2ud-01477382b377be425e718aafe30e69ceab4584725055fe89a072812ee7486d0e</string>
+    <string name="secret">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</string>
+</resources>
