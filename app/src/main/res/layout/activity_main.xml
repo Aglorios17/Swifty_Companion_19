@@ -4,15 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
+    tools:context=".MainActivity"
+    android:background="@drawable/gradient"
+    >
+    <!--> HEADER <-->
+    <LinearLayout
+        android:id="@+id/header"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentTop="true"
+        android:gravity="right"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp">
 
+        <ImageButton
+            android:id="@+id/settings"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:onClick="buttonClick"
+            android:scaleType="fitCenter"
+            android:src="@drawable/settings" />
+        <EditText
+            android:id="@+id/token"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/settings"
+            android:iconifiedByDefault="false"
+            android:hint="Input new token"
+            />
+
+    </LinearLayout>
+
+
+
+    <!--> BODY <-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_above="@+id/title_login">
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            app:srcCompat="@drawable/logo" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/title_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:text="Swifty Companion"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textAlignment="center"
+            android:fontFamily="cursive"
+            android:textColor="@color/magnolia"
+            android:textSize="40dp"
+            />
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="25dp"
+            android:backgroundTint="#8F754F"
+            android:fontFamily="monospace"
+            android:onClick="login"
+            android:text="login"
+            android:textColor="@color/magnolia"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+
+
+    <!--> FOOTER <-->
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="made by Aglorios @42Brussel"
+            android:textSize="15dp"
+            android:fontFamily="monospace"
+            android:textColor="@color/magnolia"
+            />
+    </LinearLayout>
 </RelativeLayout>
