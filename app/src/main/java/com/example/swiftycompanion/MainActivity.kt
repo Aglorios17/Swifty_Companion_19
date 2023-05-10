@@ -8,21 +8,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import com.example.swiftycompanion.databinding.ActivityMainBinding
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONObject
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.net.HttpURLConnection
-import java.net.URL
 
 class MainActivity : AppCompatActivity() {
     private lateinit var token: EditText
     private var isVisible = false
-    private lateinit var binding: ActivityMainBinding
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         val login: Button = findViewById(R.id.login)
         login.setOnClickListener {
             // TODO : connect to 0Auth2 42 API
-            val openURL = Intent(android.content.Intent.ACTION_VIEW)
+            val openURL = Intent(Intent.ACTION_VIEW)
             openURL.data = Uri.parse(getString(R.string.com_auth0_domain))
             //println(openURL.data)
             startActivity(openURL)

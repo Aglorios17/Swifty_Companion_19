@@ -8,26 +8,18 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -54,7 +46,7 @@ class ProfileActivity : AppCompatActivity(){
 
         val uri = intent.data
         if (uri != null) {
-            var code : String = uri.getQueryParameter("code").toString()
+            val code : String = uri.getQueryParameter("code").toString()
             Log.i("CODE", code)
             requestAccessToken()
             //Log.d("ACCESS_TOKEN", token)
@@ -84,7 +76,7 @@ class ProfileActivity : AppCompatActivity(){
                 val response = OkHttpClient().newCall(request).execute()
                 val responseBody = response.peekBody(Long.MAX_VALUE).string()
 
-                if (response.isSuccessful && responseBody != null) {
+                if (response.isSuccessful) {
                     val tok = JSONObject(responseBody).getString("access_token")
                     Log.i("TOK", tok)
                     withContext(Dispatchers.Main)
@@ -106,7 +98,7 @@ class ProfileActivity : AppCompatActivity(){
         Log.i("user", user)
         CoroutineScope(Dispatchers.Main).launch {
             val myTextView: TextView = findViewById(R.id.user_search)
-            val obj = async { apiRequest("/v2/users/$user", status) }.await()
+            val obj = withContext(Dispatchers.Default) { apiRequest("/v2/users/$user", status) }
             if (obj.length() != 0) {
                 // PSEUDO
                 myTextView.setBackgroundColor(Color.TRANSPARENT)
@@ -114,14 +106,13 @@ class ProfileActivity : AppCompatActivity(){
                 val pseudo: TextView = findViewById(R.id.pseudo)
                 pseudo.text = obj.get("login").toString()
                 // PICTURE
-                var image = obj.getJSONObject("image").getJSONObject("versions").get("medium")
-                var profilePicture: CircleImageView = findViewById(R.id.profile_picture)
+                val image = obj.getJSONObject("image").getJSONObject("versions").get("medium")
+                val profilePicture: CircleImageView = findViewById(R.id.profile_picture)
                 Picasso.get().load(image.toString()).into(profilePicture)
                 // LEVEL
                 val level = obj.getJSONArray("cursus_users").getJSONObject(1).get("level").toString()
-                var ll : TextView = findViewById(R.id.level)
+                val ll : TextView = findViewById(R.id.level)
                 ll.text = level
-                val parts = level.split(".")
                 val afterDecimal = level.split(".")[1].toIntOrNull()
                 if (afterDecimal != null) {
                     val progressBar : ProgressBar = findViewById(R.id.progressBar)
@@ -133,14 +124,14 @@ class ProfileActivity : AppCompatActivity(){
                     }
                 }
                 // CAMPUS
-                var campus : TextView = findViewById(R.id.campus_name)
+                val campus : TextView = findViewById(R.id.campus_name)
                 campus.text = obj.getJSONArray("campus").getJSONObject(0).get("name").toString()
                 //println(obj.getJSONArray("campus").getJSONObject(0).get("name").toString())
                 //Wallet
-                var money : TextView = findViewById(R.id.money)
+                val money : TextView = findViewById(R.id.money)
                 money.text = obj.get("wallet").toString()
                 //Since
-                var since : TextView = findViewById(R.id.date)
+                val since : TextView = findViewById(R.id.date)
                 since.text = obj.get("pool_year").toString()
                 //Status
                 //var status : TextView = findViewById(R.id.status)
@@ -150,29 +141,29 @@ class ProfileActivity : AppCompatActivity(){
                 val skillsList: ArrayList<Model> = ArrayList()
                 for (i in 0 until skillsArray.length()) {
                     val name = skillsArray.getJSONObject(i).getString("name")
-                    val level = skillsArray.getJSONObject(i).getDouble("level")
-                    val item = Model(name, level.toString())
+                    val xp = skillsArray.getJSONObject(i).getDouble("level")
+                    val item = Model(name, xp.toString())
                     skillsList.add(item)
                 }
                 //Log.i("Skills", skillsList.toString())
                 val recyclerView : RecyclerView = findViewById(R.id.recycler_view)
                 recyclerView.layoutManager = GridLayoutManager(this@ProfileActivity, 1, GridLayoutManager.VERTICAL, false)
-                recyclerView.adapter= Recycler_View_Adapter(skillsList)
+                recyclerView.adapter= RecyclerViewAdapter(skillsList)
                 /// Project
-                Log.i("Project", obj.getJSONArray("projects_users").getJSONObject(0).toString())
                 val projectArray = obj.getJSONArray("projects_users")
                 val projectList: ArrayList<Model> = ArrayList()
                 for (i in 0 until projectArray.length()) {
                     val name = projectArray.getJSONObject(i).getJSONObject("project").getString("name")
-                    val final_mark = projectArray.getJSONObject(i).getString("final_mark")
-                    if (final_mark != "null"){
-                        val item = Model(name, final_mark)
-                        projectList.add(item)}
+                    val finalMark = projectArray.getJSONObject(i).getString("final_mark")
+                    if (finalMark != "null"){
+                        val item = Model(name, finalMark)
+                        projectList.add(item)
+                    }
                 }
-                //Log.i("Project", projectList.toString())
+                Log.i("Project", projectList.toString())
                 val recyclerViewProject : RecyclerView = findViewById(R.id.project_recycler_view)
                 recyclerViewProject.layoutManager = GridLayoutManager(this@ProfileActivity, 1, GridLayoutManager.VERTICAL, false)
-                recyclerViewProject.adapter= Recycler_View_Adapter(projectList)
+                recyclerViewProject.adapter= RecyclerViewAdapter(projectList)
             }
             else{
                 myTextView.setBackgroundColor(Color.argb(128, 255, 0, 0))
@@ -189,10 +180,6 @@ class ProfileActivity : AppCompatActivity(){
                 connection.requestMethod = "GET"
                 connection.connect()
 
-                val responseCode = connection.responseCode
-                val responseMessage = connection.responseMessage
-                Log.i("Response code:", "$responseCode")
-                Log.i("Response message:", "$responseMessage")
                 if (connection.responseCode == HttpURLConnection.HTTP_OK) {
                     val response = connection.inputStream.bufferedReader().use { it.readText() }
                     Log.i("Response message:", response)
@@ -213,15 +200,10 @@ class ProfileActivity : AppCompatActivity(){
             }
         }
     }
-    fun Fragment.hideKeyboard() {
-        view?.let { activity?.hideKeyboard(it) }
-    }
-
-    fun Activity.hideKeyboard() {
+    private fun Activity.hideKeyboard() {
         hideKeyboard(currentFocus ?: View(this))
     }
-
-    fun Context.hideKeyboard(view: View) {
+    private fun Context.hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
