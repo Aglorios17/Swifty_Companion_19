@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //getString(R.string.com_auth0_client_id),
 
         setContentView(R.layout.activity_main)
 
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             // TODO : connect to 0Auth2 42 API
             val openURL = Intent(android.content.Intent.ACTION_VIEW)
             openURL.data = Uri.parse(getString(R.string.com_auth0_domain))
-            println(openURL.data)
+            //println(openURL.data)
             startActivity(openURL)
         }
         }
