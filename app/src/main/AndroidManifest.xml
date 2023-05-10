@@ -25,7 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ProfileActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

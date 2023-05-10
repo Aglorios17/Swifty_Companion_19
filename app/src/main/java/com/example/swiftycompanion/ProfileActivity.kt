@@ -1,10 +1,15 @@
 package com.example.swiftycompanion
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -13,8 +18,11 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.CoroutineScope
@@ -102,6 +110,7 @@ class ProfileActivity : AppCompatActivity(){
             if (obj.length() != 0) {
                 // PSEUDO
                 myTextView.setBackgroundColor(Color.TRANSPARENT)
+                hideKeyboard()
                 val pseudo: TextView = findViewById(R.id.pseudo)
                 pseudo.text = obj.get("login").toString()
                 // PICTURE
@@ -109,7 +118,7 @@ class ProfileActivity : AppCompatActivity(){
                 var profilePicture: CircleImageView = findViewById(R.id.profile_picture)
                 Picasso.get().load(image.toString()).into(profilePicture)
                 // LEVEL
-                val level = obj.getJSONArray("cursus_users").getJSONObject(0).get("level").toString()
+                val level = obj.getJSONArray("cursus_users").getJSONObject(1).get("level").toString()
                 var ll : TextView = findViewById(R.id.level)
                 ll.text = level
                 val parts = level.split(".")
@@ -137,22 +146,39 @@ class ProfileActivity : AppCompatActivity(){
                 //var status : TextView = findViewById(R.id.status)
                 //status.text = obj.get("kind").toString()
                 //Skills
-                val skillsArray = obj.getJSONArray("cursus_users").getJSONObject(0).getJSONArray("skills")
-                val skillsList = ArrayList<String>()
+                val skillsArray = obj.getJSONArray("cursus_users").getJSONObject(1).getJSONArray("skills")
+                val skillsList: ArrayList<Model> = ArrayList()
                 for (i in 0 until skillsArray.length()) {
                     val name = skillsArray.getJSONObject(i).getString("name")
                     val level = skillsArray.getJSONObject(i).getDouble("level")
-                    skillsList.add("$name: $level")
+                    val item = Model(name, level.toString())
+                    skillsList.add(item)
                 }
-                Log.i("Skills", skillsList.toString())
-
+                //Log.i("Skills", skillsList.toString())
+                val recyclerView : RecyclerView = findViewById(R.id.recycler_view)
+                recyclerView.layoutManager = GridLayoutManager(this@ProfileActivity, 1, GridLayoutManager.VERTICAL, false)
+                recyclerView.adapter= Recycler_View_Adapter(skillsList)
+                /// Project
+                Log.i("Project", obj.getJSONArray("projects_users").getJSONObject(0).toString())
+                val projectArray = obj.getJSONArray("projects_users")
+                val projectList: ArrayList<Model> = ArrayList()
+                for (i in 0 until projectArray.length()) {
+                    val name = projectArray.getJSONObject(i).getJSONObject("project").getString("name")
+                    val final_mark = projectArray.getJSONObject(i).getString("final_mark")
+                    if (final_mark != "null"){
+                        val item = Model(name, final_mark)
+                        projectList.add(item)}
+                }
+                //Log.i("Project", projectList.toString())
+                val recyclerViewProject : RecyclerView = findViewById(R.id.project_recycler_view)
+                recyclerViewProject.layoutManager = GridLayoutManager(this@ProfileActivity, 1, GridLayoutManager.VERTICAL, false)
+                recyclerViewProject.adapter= Recycler_View_Adapter(projectList)
             }
             else{
                 myTextView.setBackgroundColor(Color.argb(128, 255, 0, 0))
             }
         }
     }
-
     private suspend fun apiRequest(route: String, status: Int) : JSONObject
     {
         return withContext(Dispatchers.IO) {
@@ -165,11 +191,11 @@ class ProfileActivity : AppCompatActivity(){
 
                 val responseCode = connection.responseCode
                 val responseMessage = connection.responseMessage
-                println("Response code: $responseCode")
-                println("Response message: $responseMessage")
+                Log.i("Response code:", "$responseCode")
+                Log.i("Response message:", "$responseMessage")
                 if (connection.responseCode == HttpURLConnection.HTTP_OK) {
                     val response = connection.inputStream.bufferedReader().use { it.readText() }
-                    println(response)
+                    Log.i("Response message:", response)
                     JSONObject(response)
                 } else {
                     // Handle errors
@@ -187,5 +213,16 @@ class ProfileActivity : AppCompatActivity(){
             }
         }
     }
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
 
+    fun Activity.hideKeyboard() {
+        hideKeyboard(currentFocus ?: View(this))
+    }
+
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+    }
 }
