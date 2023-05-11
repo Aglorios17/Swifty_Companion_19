@@ -4,16 +4,16 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -26,40 +26,81 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
-import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
-
 class ProfileActivity : AppCompatActivity(){
     private lateinit var token : String
+    private lateinit var actualUser : String
+    private lateinit var recentList: ArrayList<String>
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.profile_layout)
-        val logout: Button = findViewById(R.id.back)
-        logout.setOnClickListener {
-            token = ""
-            val log = Intent(this, MainActivity::class.java)
-            startActivity(log)
-        }
 
+        val searchUser = intent.extras
+        if (searchUser != null)
+        {
+            token = searchUser.getString("token").toString()
+            actualUser = searchUser.getString("user").toString()
+            recentList = ArrayList()
+            searchUser.getStringArrayList("recent")?.let { recentList.addAll(it) }
+            Log.i(searchUser.getString("user").toString(), token)
+            setupProfile(searchUser.getString("user").toString(), token, 1)
+        }
         val uri = intent.data
-        if (uri != null) {
+        if (uri != null && uri.getQueryParameter("token").toString() != "") {
             val code : String = uri.getQueryParameter("code").toString()
             Log.i("CODE", code)
-            requestAccessToken()
-            //Log.d("ACCESS_TOKEN", token)
-            //setupProfile()
+            if (code == "null") {
+                val log = Intent(this, MainActivity::class.java)
+                log.putExtra("access", "false")
+                startActivity(log)
+                finish()
+            }
+            else if (token == "null")
+                requestAccessToken()
+        }
+
+
+        setContentView(R.layout.profile_layout)
+        val logout: Button = findViewById(R.id.logout)
+        logout.setOnClickListener {
+            val log = Intent(this, MainActivity::class.java)
+            log.putExtra("access", "true")
+            log.putExtra("token", token)
+            log.putExtra("user", "aglorios")
+            startActivity(log)
+            finish()
         }
         val search: Button = findViewById(R.id.search)
-        val user: EditText = findViewById(R.id.user_search)
         search.setOnClickListener {
-            setupProfile(user.text.toString(), token, 1)
+            val searchUserView = Intent(this@ProfileActivity, SearchUser::class.java)
+            searchUserView.putExtra("token", token)
+            searchUserView.putExtra("user", actualUser)
+            searchUserView.putExtra("recent", recentList)
+            startActivity(searchUserView)
+        }
+        val profile: Button = findViewById(R.id.my_profile)
+        profile.setOnClickListener {
+            setupProfile("aglorios", token, 1)
+        }
+        val show: LinearLayout = findViewById(R.id.data)
+        val data: CardView = findViewById(R.id.more_info)
+        val more: TextView = findViewById(R.id.more_text)
+        data.setOnClickListener{
+            if (more.text == "more") {
+                more.text = "less"
+                show.visibility = View.VISIBLE
+            }
+            else {
+                more.text = "more"
+                show.visibility = View.GONE
+            }
         }
     }
 
     private fun requestAccessToken() {
+        Log.i("NEW TOKEN", "REQUEST NEW TOKEN")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val request = Request.Builder()
@@ -68,17 +109,17 @@ class ProfileActivity : AppCompatActivity(){
                     .post(
                         FormBody.Builder()
                             .add("grant_type", "client_credentials")
-                            .add("client_id", getString(R.string.com_auth0_client_id))
-                            .add("client_secret", getString(R.string.secret))
+                            .add("client_id", getString(R.string.com_auth0_uid))
+                            .add("client_secret", getString(R.string.com_auth0_secret))
                             .build()
                     )
                     .build()
                 val response = OkHttpClient().newCall(request).execute()
                 val responseBody = response.peekBody(Long.MAX_VALUE).string()
 
+
                 if (response.isSuccessful) {
                     val tok = JSONObject(responseBody).getString("access_token")
-                    Log.i("TOK", tok)
                     withContext(Dispatchers.Main)
                     {
                         setupProfile("aglorios", tok, 0)
@@ -94,17 +135,27 @@ class ProfileActivity : AppCompatActivity(){
 
     private fun setupProfile(user: String, tok : String, status : Int){
         token = tok
+        actualUser = user
         Log.i("TOKEN", token)
         Log.i("user", user)
         CoroutineScope(Dispatchers.Main).launch {
-            val myTextView: TextView = findViewById(R.id.user_search)
             val obj = withContext(Dispatchers.Default) { apiRequest("/v2/users/$user", status) }
             if (obj.length() != 0) {
                 // PSEUDO
-                myTextView.setBackgroundColor(Color.TRANSPARENT)
                 hideKeyboard()
                 val pseudo: TextView = findViewById(R.id.pseudo)
                 pseudo.text = obj.get("login").toString()
+                // Personnal Data
+                val dataList: ArrayList<Model> = ArrayList()
+                dataList.add(Model("First name :", obj.get("first_name").toString()))
+                dataList.add(Model("Last name :", obj.get("last_name").toString()))
+                dataList.add(Model("Email :", obj.get("email").toString()))
+                if (obj.get("phone").toString() != "hidden")
+                    dataList.add(Model("Phone :", obj.get("phone").toString()))
+                dataList.add(Model("Status :", obj.get("kind").toString()))
+                val recyclerViewData : RecyclerView = findViewById(R.id.recycler_view_data)
+                recyclerViewData.layoutManager = GridLayoutManager(this@ProfileActivity, 1, GridLayoutManager.VERTICAL, false)
+                recyclerViewData.adapter= RecyclerViewAdapter(dataList)
                 // PICTURE
                 val image = obj.getJSONObject("image").getJSONObject("versions").get("medium")
                 val profilePicture: CircleImageView = findViewById(R.id.profile_picture)
@@ -142,7 +193,7 @@ class ProfileActivity : AppCompatActivity(){
                 for (i in 0 until skillsArray.length()) {
                     val name = skillsArray.getJSONObject(i).getString("name")
                     val xp = skillsArray.getJSONObject(i).getDouble("level")
-                    val item = Model(name, xp.toString())
+                    val item = Model(name, xp.toString().take(5))
                     skillsList.add(item)
                 }
                 //Log.i("Skills", skillsList.toString())
@@ -160,13 +211,24 @@ class ProfileActivity : AppCompatActivity(){
                         projectList.add(item)
                     }
                 }
-                Log.i("Project", projectList.toString())
+                //Log.i("Project", projectList.toString())
                 val recyclerViewProject : RecyclerView = findViewById(R.id.project_recycler_view)
                 recyclerViewProject.layoutManager = GridLayoutManager(this@ProfileActivity, 1, GridLayoutManager.VERTICAL, false)
                 recyclerViewProject.adapter= RecyclerViewAdapter(projectList)
-            }
-            else{
-                myTextView.setBackgroundColor(Color.argb(128, 255, 0, 0))
+                /// Achievements
+                ///v2/users/:user_id/events
+                //val event = withContext(Dispatchers.Default) { apiRequest("/v2/users/$user/events", status)}
+                //Log.i("Events", event.toString())
+                // loading
+                val myProfile : Button = findViewById(R.id.my_profile)
+                if (user != "aglorios"){
+                    myProfile.visibility = View.VISIBLE
+                }
+                else {
+                    myProfile.visibility = View.INVISIBLE
+                }
+                val loading : LinearLayout = findViewById(R.id.loading)
+                loading.visibility = View.GONE
             }
         }
     }
@@ -187,14 +249,14 @@ class ProfileActivity : AppCompatActivity(){
                 } else {
                     // Handle errors
                     if (status == 0){
-                        throw IOException("HTTP error code: ${connection.responseCode}")
+                        JSONObject()
                     }
                     else {
                         JSONObject()
                     }
                 }
             } catch (e: Exception) {
-                throw IOException("Error while getting response from $route: ${e.message}")
+                JSONObject()
             } finally {
                 connection.disconnect()
             }
@@ -207,4 +269,6 @@ class ProfileActivity : AppCompatActivity(){
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
+//    fun more_info(view: View) {}
 }

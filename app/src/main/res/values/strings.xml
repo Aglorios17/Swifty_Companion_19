@@ -46,5 +46,27 @@
     <string name="login_failure_message">Failed to log in. %1$s</string>
     <string name="general_failure_with_exception_code">Failed - exception code: %1$s</string>
     <string name="general_success_message">Success!</string>
+    <string name="made_by_aglorios_42brussels">made by Aglorios @42Brussels</string>
+    <string name="connection_refused">Connection refused</string>
+    <string name="login">login</string>
+    <string name="swifty_companion">Swifty Companion</string>
+    <string name="input_new_token">Input new token</string>
+    <string name="todo">TODO</string>
+    <string name="projects">Projects</string>
+    <string name="skills">Skills</string>
+    <string name="more">more</string>
+    <string name="logout">logout</string>
+    <string name="search_42_user">Search 42 User</string>
+    <string name="search">search</string>
+    <string name="pseudo">Pseudo</string>
+    <string name="personnal_informations">Personnal informations</string>
+    <string name="level">Level</string>
+    <string name="campus">Campus</string>
+    <string name="money">Money</string>
+    <string name="since">Since</string>
+    <string name="looking_for_someone">Looking for someone ?</string>
+    <string name="back">back</string>
+    <string name="my_profile">my profile</string>
+    <string name="erase_or_recreate_token">Erase or recreate token</string>
 
 </resources>

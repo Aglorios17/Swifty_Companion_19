@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,41 +13,52 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        app:layout_constraintTop_toTopOf="parent"
         android:gravity="right"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp">
+        android:layout_marginRight="5dp"
+        tools:ignore="MissingConstraints,RtlHardcoded">
 
         <ImageButton
             android:id="@+id/settings"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@null"
-            android:onClick="buttonClick"
             android:scaleType="fitCenter"
-            android:src="@drawable/settings" />
+            android:src="@drawable/settings"
+            android:contentDescription="@string/todo" />
+        <Button
+            android:id="@+id/erase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="#8F754F"
+            android:fontFamily="monospace"
+            android:text="@string/erase_or_recreate_token"
+            android:textColor="@color/magnolia"
+            android:textSize="15sp" />
         <EditText
             android:id="@+id/token"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:layout_marginLeft="10dp"
-            android:layout_below="@id/settings"
             android:iconifiedByDefault="false"
-            android:hint="Input new token"
-            />
-
+            android:hint="@string/input_new_token"
+            android:autofillHints=""
+            android:inputType="text" />
     </LinearLayout>
-
-
 
     <!--> BODY <-->
     <LinearLayout
+        android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:gravity="center"
         android:orientation="vertical"
-        android:layout_above="@+id/title_login">
+        app:layout_constraintBottom_toTopOf="@+id/title_login">
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
@@ -58,17 +69,21 @@
         android:id="@+id/title_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/image"
+        tools:ignore="MissingConstraints">
         <TextView
-            android:text="Swifty Companion"
+            android:text="@string/swifty_companion"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:textAlignment="center"
             android:fontFamily="cursive"
             android:textColor="@color/magnolia"
-            android:textSize="40dp"
+            android:textSize="40sp"
             />
 
         <Button
@@ -80,10 +95,32 @@
             android:layout_marginEnd="25dp"
             android:backgroundTint="#8F754F"
             android:fontFamily="monospace"
-            android:onClick="login"
-            android:text="login"
+            android:text="@string/login"
             android:textColor="@color/magnolia"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
+        <LinearLayout
+            android:id="@+id/error_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:layout_gravity="center">
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:cardCornerRadius="8dp"
+                android:backgroundTint="#800000">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/connection_refused"
+                android:layout_margin="5dp"
+                android:textSize="15sp"
+                android:textColor="@color/magnolia"
+                />
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
     </LinearLayout>
 
 
@@ -93,17 +130,18 @@
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center" >
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:text="made by Aglorios @42Brussel"
-            android:textSize="15dp"
+            android:text="@string/made_by_aglorios_42brussels"
+            android:textSize="15sp"
             android:fontFamily="monospace"
             android:textColor="@color/magnolia"
             />
     </LinearLayout>
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

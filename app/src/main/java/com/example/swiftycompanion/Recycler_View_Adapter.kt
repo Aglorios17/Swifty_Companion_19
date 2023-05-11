@@ -30,7 +30,7 @@ class RecyclerViewAdapter(private val itemList: ArrayList<Model>) :
     }
 
     inner class ModelViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var constraint: ConstraintLayout
+        private var constraint: ConstraintLayout
         var itemText: TextView
         var itemText2: TextView
 
