@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private var token: String = ""
     private var user: String = ""
 
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,13 +43,18 @@ class MainActivity : AppCompatActivity() {
 
         val settings: ImageButton = findViewById(R.id.settings)
         val erase : Button = findViewById(R.id.erase)
+        //val userEntry : EditText = findViewById(R.id.user)
         settings.setOnClickListener {
             if (!isVisible){
-            erase.visibility = View.VISIBLE
-            isVisible = true
+                //userEntry.visibility = View.VISIBLE
+                erase.visibility = View.VISIBLE
+                isVisible = true
             }
             else{
+                //if (userEntry.text.isNotEmpty())
+                 //   user = userEntry.text.isNotEmpty().toString()
                 erase.visibility = View.GONE
+                //userEntry.visibility = View.GONE
                 isVisible = false
             }
         }

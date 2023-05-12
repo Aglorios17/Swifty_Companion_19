@@ -56,6 +56,7 @@ class SearchUser : AppCompatActivity() {
             val backI = Intent(this@SearchUser, ProfileActivity::class.java)
             backI.putExtra("token", token)
             backI.putExtra("user", user)
+            backI.putExtra("recent", recentList)
             startActivity(backI)
             finish()
         }

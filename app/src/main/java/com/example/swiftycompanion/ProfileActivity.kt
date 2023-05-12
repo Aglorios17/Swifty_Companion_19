@@ -60,8 +60,6 @@ class ProfileActivity : AppCompatActivity(){
             else if (token == "null")
                 requestAccessToken()
         }
-
-
         setContentView(R.layout.profile_layout)
         val logout: Button = findViewById(R.id.logout)
         logout.setOnClickListener {
@@ -126,9 +124,16 @@ class ProfileActivity : AppCompatActivity(){
                     }
                 } else {
                     Log.e("Request ACCESS_TOKEN", "Failed to get access token")
+                    val log = Intent(this@ProfileActivity, MainActivity::class.java)
+                    startActivity(log)
+                    finish()
+
                 }
             } catch (e: Exception) {
                 Log.e("Request ACCESS_TOKEN", "Error: ${e.message}")
+                val log = Intent(this@ProfileActivity, MainActivity::class.java)
+                startActivity(log)
+                finish()
             }
         }
     }
@@ -249,6 +254,10 @@ class ProfileActivity : AppCompatActivity(){
                 } else {
                     // Handle errors
                     if (status == 0){
+                        val log = Intent(this@ProfileActivity, MainActivity::class.java)
+                        startActivity(log)
+                        finish()
+                        Log.e("Request ACCESS_TOKEN", "Error: ${connection.responseCode}")
                         JSONObject()
                     }
                     else {
@@ -256,6 +265,10 @@ class ProfileActivity : AppCompatActivity(){
                     }
                 }
             } catch (e: Exception) {
+                val log = Intent(this@ProfileActivity, MainActivity::class.java)
+                startActivity(log)
+                finish()
+                Log.e("Request ACCESS_TOKEN", "Error: ${e.message}")
                 JSONObject()
             } finally {
                 connection.disconnect()

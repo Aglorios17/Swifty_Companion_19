@@ -28,25 +28,27 @@
             android:src="@drawable/settings"
             android:contentDescription="@string/todo" />
         <Button
+            android:layout_weight="1"
             android:id="@+id/erase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="2dp"
             android:backgroundTint="#8F754F"
             android:fontFamily="monospace"
             android:text="@string/erase_or_recreate_token"
             android:textColor="@color/magnolia"
             android:textSize="15sp" />
         <EditText
-            android:id="@+id/token"
-            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/user"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:layout_marginLeft="10dp"
             android:iconifiedByDefault="false"
-            android:hint="@string/input_new_token"
+            android:hint="username"
             android:autofillHints=""
             android:inputType="text" />
     </LinearLayout>
@@ -83,8 +85,7 @@
             android:textAlignment="center"
             android:fontFamily="cursive"
             android:textColor="@color/magnolia"
-            android:textSize="40sp"
-            />
+            android:textSize="40sp" />
 
         <Button
             android:id="@+id/login"

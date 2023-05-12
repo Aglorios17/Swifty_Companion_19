@@ -67,6 +67,6 @@
     <string name="looking_for_someone">Looking for someone ?</string>
     <string name="back">back</string>
     <string name="my_profile">my profile</string>
-    <string name="erase_or_recreate_token">Erase or recreate token</string>
+    <string name="erase_or_recreate_token">Erase/recreate token</string>
 
 </resources>
