@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +17,6 @@ class MainActivity : AppCompatActivity() {
     private var isVisible = false
     private var token: String = ""
     private var user: String = ""
-
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity() {
         }
         erase.setOnClickListener{
             token = ""
-            user = ""
             login.text = "login"
         }
         login.setOnClickListener {

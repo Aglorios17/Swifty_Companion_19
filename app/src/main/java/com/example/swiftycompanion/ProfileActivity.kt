@@ -66,7 +66,7 @@ class ProfileActivity : AppCompatActivity(){
             val log = Intent(this, MainActivity::class.java)
             log.putExtra("access", "true")
             log.putExtra("token", token)
-            log.putExtra("user", "aglorios")
+            log.putExtra("user", getString(R.string.mainUser))
             startActivity(log)
             finish()
         }
@@ -80,7 +80,7 @@ class ProfileActivity : AppCompatActivity(){
         }
         val profile: Button = findViewById(R.id.my_profile)
         profile.setOnClickListener {
-            setupProfile("aglorios", token, 1)
+            setupProfile(getString(R.string.mainUser), token, 1)
         }
         val show: LinearLayout = findViewById(R.id.data)
         val data: CardView = findViewById(R.id.more_info)
@@ -120,7 +120,7 @@ class ProfileActivity : AppCompatActivity(){
                     val tok = JSONObject(responseBody).getString("access_token")
                     withContext(Dispatchers.Main)
                     {
-                        setupProfile("aglorios", tok, 0)
+                        setupProfile(getString(R.string.mainUser), tok, 0)
                     }
                 } else {
                     Log.e("Request ACCESS_TOKEN", "Failed to get access token")
@@ -226,7 +226,7 @@ class ProfileActivity : AppCompatActivity(){
                 //Log.i("Events", event.toString())
                 // loading
                 val myProfile : Button = findViewById(R.id.my_profile)
-                if (user != "aglorios"){
+                if (user != getString(R.string.mainUser)){
                     myProfile.visibility = View.VISIBLE
                 }
                 else {

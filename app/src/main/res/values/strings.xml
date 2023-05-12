@@ -68,5 +68,6 @@
     <string name="back">back</string>
     <string name="my_profile">my profile</string>
     <string name="erase_or_recreate_token">Erase/recreate token</string>
+    <string name="mainUser">aglorios</string>
 
 </resources>

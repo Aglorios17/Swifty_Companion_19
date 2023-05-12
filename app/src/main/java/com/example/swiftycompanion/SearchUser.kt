@@ -48,6 +48,8 @@ class SearchUser : AppCompatActivity() {
         val logout: Button = findViewById(R.id.logout)
         logout.setOnClickListener {
             val logoutI = Intent(this@SearchUser, MainActivity::class.java)
+            logoutI.putExtra("token", token)
+            logoutI.putExtra("user", user)
             startActivity(logoutI)
             finish()
         }
