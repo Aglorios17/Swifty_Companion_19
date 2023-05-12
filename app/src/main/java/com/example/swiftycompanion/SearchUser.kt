@@ -50,6 +50,7 @@ class SearchUser : AppCompatActivity() {
             val logoutI = Intent(this@SearchUser, MainActivity::class.java)
             logoutI.putExtra("token", token)
             logoutI.putExtra("user", user)
+            logoutI.putExtra("recent", recentList)
             startActivity(logoutI)
             finish()
         }

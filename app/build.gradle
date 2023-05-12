@@ -2,11 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
-/*
-def localPropertiesFile = rootProject.file("local.properties")
-def localProperties = new Properties()
-localProperties.load(new FileInputStream(localPropertiesFile))
-*/
+
 android {
     namespace 'com.example.swiftycompanion'
     compileSdk 33
@@ -19,11 +15,18 @@ android {
         manifestPlaceholders = [auth0Domain: "@string/com_auth0_domain", auth0Scheme: "@string/com_auth0_scheme"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file(".env").newDataInputStream())
+        buildConfigField "String", "domain", "\"${properties.getProperty("domain")}\""
+        buildConfigField "String", "uid", "\"${properties.getProperty("uid")}\""
+        buildConfigField "String", "secret", "\"${properties.getProperty("secret")}\""
+        buildConfigField "String", "mainuser", "\"${properties.getProperty("mainuser")}\""
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -36,6 +39,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 

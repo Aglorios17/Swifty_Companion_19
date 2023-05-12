@@ -155,3 +155,4 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,kotlin
 !/app/src/main/res/values/auth0.xml
+.env

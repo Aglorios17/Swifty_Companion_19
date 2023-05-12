@@ -7,16 +7,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+
 
 
 class MainActivity : AppCompatActivity() {
     private var isVisible = false
     private var token: String = ""
     private var user: String = ""
+    private var recentList: ArrayList<String> = ArrayList()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         if (value != null) {
             token = value.getString("token").toString()
             user = value.getString("user").toString()
+            value.getStringArrayList("recent")?.let { recentList.addAll(it) }
             val err: LinearLayout = findViewById(R.id.error_message)
             val access = value.getString("access").toString()
             Log.i("test", access)
@@ -66,13 +68,18 @@ class MainActivity : AppCompatActivity() {
             if (token.isEmpty()) {
                 // connect to 0Auth2 42 API
                 val openURL = Intent(Intent.ACTION_VIEW)
-                openURL.data = Uri.parse(getString(R.string.com_auth0_domain))
+                openURL.data = Uri.parse(BuildConfig.domain)
+                //val search = Intent(Intent.ACTION_VIEW)
+                //search.data = openURL.data
+                //search.putExtra("recent", recentList)
                 startActivity(openURL)
             }
             else {
                 val connect = Intent(this, ProfileActivity::class.java)
                 connect.putExtra("token", token)
                 connect.putExtra("user", user)
+                if (recentList.isNotEmpty())
+                    connect.putExtra("recent", recentList)
                 startActivity(connect)
             }
         }

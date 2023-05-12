@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--
- Secret Auth0 identifiers and settings
+ Secret Auth identifiers and settings
  =====================================
  These values are required to connect to Auth0 for authorization,
  which is why we're storing them in their own string resource file.
@@ -9,7 +9,8 @@
  DO NOT CHECK THIS FILE INTO A PUBLIC REPOSITORY!
  -->
 
-    <string name="com_auth0_domain">-</string>
-    <string name="com_auth0_client_id">-</string>
-    <string name="secret">lol</string>
+    <string name="com_auth0_domain">domain</string>
+    <string name="com_auth0_uid">uid</string>
+    <string name="com_auth0_secret">secret</string>
+    <string name="com_auth0_user">user</string>
 </resources>

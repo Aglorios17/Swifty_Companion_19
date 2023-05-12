@@ -48,7 +48,7 @@
             android:visibility="gone"
             android:layout_marginLeft="10dp"
             android:iconifiedByDefault="false"
-            android:hint="username"
+            android:hint="@string/username"
             android:autofillHints=""
             android:inputType="text" />
     </LinearLayout>
