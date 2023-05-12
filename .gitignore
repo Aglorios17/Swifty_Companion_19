@@ -1,5 +1,8 @@
-# Created by https://www.toptal.com/developers/gitignore/api/androidstudio,kotlin
-# Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,kotlin
+# Created by https://www.toptal.com/developers/gitignore/api/androidstudio,kotlin,dotenv
+# Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,kotlin,dotenv
+
+### dotenv ###
+.env
 
 ### Kotlin ###
 # Compiled class file
@@ -153,6 +156,4 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
-# End of https://www.toptal.com/developers/gitignore/api/androidstudio,kotlin
-!/app/src/main/res/values/auth0.xml
-.env
+# End of https://www.toptal.com/developers/gitignore/api/androidstudio,kotlin,dotenv

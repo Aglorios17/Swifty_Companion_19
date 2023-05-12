@@ -128,7 +128,6 @@ class ProfileActivity : AppCompatActivity(){
                     val log = Intent(this@ProfileActivity, MainActivity::class.java)
                     startActivity(log)
                     finish()
-
                 }
             } catch (e: Exception) {
                 Log.e("Request ACCESS_TOKEN", "Error: ${e.message}")
