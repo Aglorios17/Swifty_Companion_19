@@ -70,4 +70,5 @@
     <string name="erase_or_recreate_token">Erase/recreate token</string>
     <string name="mainUser">aglorios</string>
     <string name="username">username</string>
+    <string name="reload">reload</string>
 </resources>

@@ -364,6 +364,7 @@
         android:id="@+id/loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:gravity="center"
         android:visibility="visible"
         android:background="@drawable/gradient">
@@ -371,6 +372,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true" />
+        <Button
+            android:id="@+id/reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/reload"
+            android:textColor="@color/magnolia"
+            android:backgroundTint="@color/ecru" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

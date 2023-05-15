@@ -61,6 +61,11 @@ class ProfileActivity : AppCompatActivity(){
                 requestAccessToken()
         }
         setContentView(R.layout.profile_layout)
+        val reload: Button = findViewById(R.id.reload)
+        reload.setOnClickListener{
+            requestAccessToken()
+        }
+
         val logout: Button = findViewById(R.id.logout)
         logout.setOnClickListener {
             val log = Intent(this, MainActivity::class.java)
