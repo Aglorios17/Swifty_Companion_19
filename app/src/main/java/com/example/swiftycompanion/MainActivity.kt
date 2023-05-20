@@ -34,8 +34,9 @@ class MainActivity : AppCompatActivity() {
             val access = value.getString("access").toString()
             Log.i("test", access)
             if (access == "false") {
-                Log.i("test", access)
                 err.visibility = View.VISIBLE
+                login.text = "login"
+                token = ""
             } else {
                 err.visibility = View.GONE
             }
